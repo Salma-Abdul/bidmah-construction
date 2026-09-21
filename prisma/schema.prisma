@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  name String @unique
+  users User[]
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
+
+  projects Project[] @relation("ProjectManager")
+  expenses Expense[]
+  attendance Attendance[]
+  dailyReports DailyReport[]
+}
+
+model Project {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  location String
+  status String @default("ACTIVE")
+
+  managerId Int?
+  manager User? @relation("ProjectManager", fields: [managerId], references: [id])
+
+  materials Material[]
+  expenses Expense[]
+  attendance Attendance[]
+  dailyReports DailyReport[]
+
+  createdAt DateTime @default(now())
+}
+
+model Material {
+  id Int @id @default(autoincrement())
+  name String
+  quantity Float
+  unit String
+  projectId Int
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Expense {
+  id Int @id @default(autoincrement())
+  description String
+  amount Float
+  category String @default("GENERAL")
+  projectId Int
+  recordedBy Int
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [recordedBy], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Attendance {
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  status String @default("PRESENT")
+  projectId Int
+  userId Int
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([date, projectId, userId])
+}
+
+model DailyReport {
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  workersCount Int
+  workDone String
+  materialsUsed String
+  notes String
+  projectId Int
+  reportedBy Int
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [reportedBy], references: [id])
+
+  @@unique([date, projectId])
+}
