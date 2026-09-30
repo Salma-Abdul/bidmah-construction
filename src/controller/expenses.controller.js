@@ -1,4 +1,4 @@
-import prisma from "../prisma.js";
+import prisma from "../lib/prisma.js";
 
 const createExpense = async (req, res) => {
   try {

@@ -1,9 +1,5 @@
-
-
-const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcryptjs");
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma.js";
+import bcrypt from "bcryptjs";
 
 const getUsers = async (req, res) => {
   try {
@@ -55,12 +51,7 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const {
-      name,
-      email,
-      password,
-      role,
-    } = req.body;
+    const { name, email, password, role } = req.body;
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({
@@ -117,26 +108,13 @@ const updateUser = async (req, res) => {
       });
     }
 
-    const {
-      name,
-      email,
-      password,
-      role,
-    } = req.body;
+    const { name, email, password, role } = req.body;
 
     const data = {};
 
-    if (name !== undefined) {
-      data.name = name;
-    }
-
-    if (email !== undefined) {
-      data.email = email;
-    }
-
-    if (role !== undefined) {
-      data.role = role;
-    }
+    if (name !== undefined) data.name = name;
+    if (email !== undefined) data.email = email;
+    if (role !== undefined) data.role = role;
 
     if (password !== undefined) {
       data.passwordHash = await bcrypt.hash(password, 10);
@@ -198,7 +176,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getUsers,
   getUserById,
   createUser,

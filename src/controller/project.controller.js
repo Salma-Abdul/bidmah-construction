@@ -1,8 +1,6 @@
 // controllers/projectController.js
 
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma.js";
 
 const getProjects = async (req, res) => {
   try {
@@ -187,7 +185,7 @@ const deleteProject = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getProjects,
   getProjectById,
   createProject,
