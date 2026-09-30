@@ -1,15 +1,14 @@
-// routes/projectRoutes.js
+import express from "express";
 
-const express = require("express");
-const router = express.Router();
-
-const {
+import {
   getProjects,
   getProjectById,
   createProject,
   updateProject,
   deleteProject,
-} = require("../controllers/projectController");
+} from "../controller/project.controller.js";
+
+const router = express.Router();
 
 router.get("/", getProjects);
 router.get("/:id", getProjectById);
@@ -17,4 +16,4 @@ router.post("/", createProject);
 router.patch("/:id", updateProject);
 router.delete("/:id", deleteProject);
 
-module.exports = router;
+export default router;
